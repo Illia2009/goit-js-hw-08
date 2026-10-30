@@ -80,7 +80,7 @@ const galleryMerkup = images.map(({ preview, original, description }) => {
 })
   .join('');
 
-gallery.insertAdjacentElement('beforeend', galleryMerkup);
+gallery.insertAdjacentHTML('beforeend', galleryMerkup);
 
 gallery.addEventListener('click', (event) => { 
   const image = event.target.closest('.gallery-image');
