@@ -65,8 +65,8 @@ const images = [
 ];
 
 const gallery = document.querySelector('.gallery');
-const addImages = images.map(({preview, original, description}) => { 
-    return   `<li class="gallery-item">
+const galleryMerkup = images.map(({ preview, original, description }) => {
+  return `<li class="gallery-item">
   <a class="gallery-link" href="${original}">
     <img
       class="gallery-image"
@@ -77,27 +77,40 @@ const addImages = images.map(({preview, original, description}) => {
   </a>
 </li>`;
     
-});
+})
+  .join('');
 
-gallery.insertAdjacentElement('beforeend', addImages.join(''));
+gallery.insertAdjacentElement('beforeend', galleryMerkup);
 
 gallery.addEventListener('click', (event) => { 
-  event.preventDefault();
+  const image = event.target.closest('.gallery-image');
   if (!image) { 
     return;
   }
-  const datasource = basicLightbox.create(
-     `<img src='${largeImageURL}' alt='${imageAlt}'>`,
+  event.preventDefault();
+
+  const onEscKeyPress = event => { 
+    if (event.code === 'Escape') { 
+      instance.close();
+    }
+  };
+
+  const instance = basicLightbox.create(
+    `<img
+    src="${image.dataset.source}"
+    alt="${image.alt}"
+    />
+    `,
     {
       onShow: () => {
         document.addEventListener('keydown', onEscKeyPress);
       },
+
       onClose: () => {
         document.removeEventListener('keydown', onEscKeyPress);
       },
     }
   );
-  
- 
-  datasource.show();
+
+  instance.show();
 });
